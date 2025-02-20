@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {View, Text, TextInput, Button} from "react-native";
-import ResultIMC from "../ResultIMC";
+import ResultIMC from "./ResultIMC";
+import styles from "./style";
 
 export default function Form() {
   const [height, setHeight] = useState("");
@@ -37,7 +38,7 @@ export default function Form() {
   }
 
   return (
-    <View>
+    <View style={styles.Form}>
       <View>
         <Text>Altura</Text>
         <TextInput 
