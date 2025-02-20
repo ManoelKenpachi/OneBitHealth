@@ -3,31 +3,39 @@ import {View, Text, TextInput, Button} from "react-native";
 import ResultIMC from "../ResultIMC";
 
 export default function Form() {
-  const [height, setHeight] = useState(null);
-  const [weight, setWeight] = useState(null);
-  const [messageImc, setMessageImc] = useState("preencha peso e altura para calcular o IMC");
+  const [height, setHeight] = useState("");
+  const [weight, setWeight] = useState("");
+  const [messageImc, setMessageImc] = useState("Preencha peso e altura para calcular o IMC");
   const [imc, setImc] = useState(null);
   const [textButton, setTextButton] = useState("Calcular IMC");
 
   function imcCalculator() {
-    return setImc((weight/(height*height)).toFixed(2));
+    const h = parseFloat(height);
+    const w = parseFloat(weight);
+
+    if (!h || !w || h === 0) {
+      setMessageImc("Preencha peso e altura corretamente");
+      return;
+    }
+
+    setImc((w / (h * h)).toFixed(2));
   }
 
   function validationIMC() {
-    console.log(weight, height);
-    if (weight != null && height != null) {
+    if (weight && height) {
+      console.log("weight:", weight);
+      console.log("height:", height);
       imcCalculator();
-      setHeight(null);
-      setWeight(null);
       setMessageImc("Seu IMC é: ");
       setTextButton("Calcular Novamente");
-      return
+      return;
     }
+
     setImc(null);
     setTextButton("Calcular IMC");
     setMessageImc("Preencha peso e altura para calcular o IMC");
-    return
   }
+
   return (
     <View>
       <View>
@@ -35,7 +43,7 @@ export default function Form() {
         <TextInput 
           placeholder="Ex. 1.75" 
           keyboardType="numeric" 
-          onChange={setHeight}
+          onChangeText={(text) => setHeight(text.replace(",", "."))} // Aceita ponto como separador decimal
           value={height}
         />
 
@@ -43,15 +51,14 @@ export default function Form() {
         <TextInput 
           placeholder="Ex. 85.35" 
           keyboardType="numeric"
-          onChange={setWeight}
+          onChangeText={(text) => setWeight(text.replace(",", "."))} // Substitui vírgula por ponto
           value={weight}
         />
 
         <Button 
           title={textButton}
-          onPress={() => validationIMC()}
+          onPress={validationIMC}
         />
-
       </View>
 
       <ResultIMC messageResultIMC={messageImc} resultIMC={imc}/>
